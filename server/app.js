@@ -15,6 +15,17 @@ var passport;  // only used if you have configured properties for UAA
 // configure passport for oauth authentication with UAA
 var passportConfig = require('./passport-config');
 
+const uaa_util = require('predix-uaa-client');
+var request = require('request');
+
+var uaa_url = "https://8909dd8c-8e3d-4d85-b1cc-6f5f084154ff.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token?grant_type=client_credentials"
+var client_id = "abhay"
+var client_secret = "traffic_uaa"
+
+// Call with client credentials (UAAUrl, ClientID, ClientSecret),
+// will fetch a client token using these credentials.
+// In this case the client needs authorized_grant_types: client_credentials
+
 // if running locally, we need to set up the proxy from local config file:
 var node_env = process.env.node_env || 'development';
 if (node_env === 'development') {
@@ -170,7 +181,27 @@ app.get('/favicon.ico', function (req, res) {
 	res.send('favicon.ico');
 });
 
-app.get('/')
+
+app.get('/trafficData', function(req,res){
+  uaa_util.getToken(uaa_url, client_id, client_secret).then((newToken) => {
+    // Use token.access_token as a Bearer token Authroization header
+    // in calls to secured services.
+    console.log(newToken.access_token);
+
+    request.get('https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000033',{
+      headers: {
+        "Authorization": 'Bearer ' + newToken.access_token,
+        "Predix-Zone-Id": 'b091d2ea-219a-439d-b78a-072a66e35695'
+      }
+    }).on('response', function(response) {
+      console.log(response) // 200
+    });
+  }).catch((err) => {
+    console.error('Error getting token', err);
+
+    //res.send("Tumse naa ho paaye!");
+  });
+})
 
 // Sample route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
