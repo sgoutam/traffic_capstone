@@ -1,0 +1,159 @@
+body{
+  background-size: cover;
+  background-color: black;
+  font:2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+  font-size:100%;
+}
+
+h2{
+  font: 2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+  text-decoration-line: none;
+}
+
+h4{
+  font: 1.2em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+}
+
+hr{
+  box-shadow: 0px 3px 4px 2px rgb(255,80,80);
+}
+
+.header{
+  opacity: 0.95;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: 1px solid black;
+  text-shadow: 3px 3px 1px black;
+  box-shadow: 10px 20px 50px 0px black;
+  width:100%;
+}
+
+
+
+#loginForm{
+  background: #FFFFFF;
+  color: black;
+  opacity: 0.99;
+  margin: auto;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  box-shadow: 7px 7px 5px 3px black;
+}
+
+#cover{
+ position: fixed;
+ z-index: -10;
+ opacity: 0.5;
+}
+
+#welcome{
+  background: #FFFFFF;
+  color: black;
+  opacity: 0.99;
+  border: 1px solid black;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  width:100%;
+  margin-top: 8px;
+  box-shadow: 7px 7px 5px 3px black;
+}
+
+#leftPanel
+{
+  background: #FFFFFF;
+  color: black;
+  opacity: 0.8;
+  border: 1px solid black;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width:24%;
+  box-shadow: 7px 7px 5px 3px black;
+}
+
+#rightDash
+{
+  background: #FFFFFF;
+  color: black;
+  opacity: 0.8;
+  border: 1px solid black;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width:74%;
+  box-shadow: 7px 7px 5px 3px black;
+}
+
+input[type=text], input[type=password] {
+  background: #FEFEFE;
+  color:solid black;
+  border-radius: 5px;
+  border: 1px solid black;
+  font:2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+  font-size:100%;
+  padding: 5px;
+  box-shadow: 3px 3px 4px 2px #66b3ff;
+
+}
+
+input[type=submit],input[type=button] {
+  background-color: #FEFEFE;
+  border-radius: 5px;
+  border: 1px solid black;
+  color:black;
+  font:2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+  font-size:100%;
+  cursor:pointer;
+  box-shadow: 3px 3px 2px 2px black;
+}
+
+input[type=submit]:hover,input[type=button]:hover {
+  background-color:rgba(255,204,0,0.8);
+}
+
+
+#main{
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+ul {
+  list-style-type: none;
+  overflow: hidden;
+  float: left;
+}
+
+li {
+  background-color: rgba(0,0,0,0.8);
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 10px;
+  float: left;
+  margin-right: 10px;
+}
+
+li input{
+  display: block;
+}
+
+li input[type=button]{
+  padding: 10px;
+}
+
+
+#dataTable{
+  box-shadow: 10px 10px 5px 4px black;
+  border-radius: 10px;
+  padding: 5px;
+  background-color: rgba(255,255,255,0.95);
+  float: right;
+  margin-right: 15%;
+  margin-top: 1%;
+  border-radius: 10px;
+}
+
+.header-logo{
+  width: 20vw;
+}
