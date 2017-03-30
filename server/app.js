@@ -17,8 +17,9 @@ var passportConfig = require('./passport-config');
 
 const uaa_util = require('predix-uaa-client');
 var request = require('request');
+var pretty = require('prettyjson');
 
-var uaa_url = "https://8909dd8c-8e3d-4d85-b1cc-6f5f084154ff.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token?grant_type=client_credentials"
+var uaa_url = "https://a339a6af-44a5-4f87-ada2-cc6c49124765.predix-uaa.run.aws-usw02-pr.ice.predix.io/oauth/token?grant_type=client_credentials"
 var client_id = "abhay"
 var client_secret = "traffic_uaa"
 
@@ -188,19 +189,33 @@ app.get('/trafficData', function(req,res){
     // in calls to secured services.
     console.log(newToken.access_token);
 
-    request.get('https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000033',{
-      headers: {
+    var options = {
+      method: 'GET',
+      url: 'https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000018',
+      /*qs:
+      { 'event-types': 'TFEVT',
+        'start-ts': '1453766605577',
+        'end-ts': '1453772603879',
+        size: '10',
+        page: '1' },*/
+      headers:
+      { //'postman-token': '37688865-2e17-4500-ec8d-ba80df59f3b3',
+        //'cache-control': 'no-cache',
         "Authorization": 'Bearer ' + newToken.access_token,
-        "Predix-Zone-Id": 'b091d2ea-219a-439d-b78a-072a66e35695'
+        "Predix-Zone-Id": 'aa7c9b1d-2145-4f6b-be0b-176dc72ef85b',
       }
-    }).on('response', function(response) {
-      console.log(response) // 200
+    };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+
+
+      console.log(pretty.render(JSON.parse(body)));
     });
+
   }).catch((err) => {
     console.error('Error getting token', err);
-
-    //res.send("Tumse naa ho paaye!");
-  });
+    });
 })
 
 // Sample route middleware to ensure user is authenticated.
