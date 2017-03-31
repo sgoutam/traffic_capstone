@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Predix Node JS PostgreSQL Admin</title>
   <link rel="stylesheet" href="stylesheets/style.css"></link>
@@ -7,11 +8,13 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="../scripts/learningpaths.js"></script>
   <script src="../scripts/custom.js"></script>
+  <script src="../scripts/vkbeautify.js"></script>
 
 </head>
+
 <body onload="learningPaths(this);" style="background-color:black;">
 
-    <img id="cover" src="/images/main-back.jpg" alt="">
+  <img id="cover" src="/images/main-back.jpg" alt="">
 
   <div class="header">
     <div>
@@ -19,29 +22,47 @@
       <h4>For Traffic Congestion Control</h4>
     </div>
 
-    <div id = "logout" style="margin-top:auto; margin-bottom:auto;">
+    <div id="logout" style="margin-top:auto; margin-bottom:auto;">
       <form action="/logout" method="get">
         <input type="submit" value="Logout" style="padding:10px;">
       </form>
     </div>
-
   </div>
 
   <div id="welcome">
     <h3 style="text-align: center;">Welcome to the Traffic Planning Dasboard</h3>
   </div>
 
-  <div style="margin-top:10px;" align="center">
-    <div id="leftPanel" style="display: inline-block">
-      <form action="/trafficData">
-        <input type="submit" value="Get Data">
-      </form>
-    </div>
-    <div id="rightDash" style="display: inline-block">
-      <h3>Data will be displayed here</h3>
-    </div>
+
+  <div id="Panel" name="controlPanel">
+
+    <button onclick="left()" id="controls" style="display: inline-block;">
+        <h2 class="w3-xxlarge"><i class="glyphicon glyphicon-arrow-left"></i></h2>
+      </button>
+
+    <button onclick="center()" id="controls" style="display: inline-block;">
+        <h2 class="w3-xxlarge"><i class="glyphicon glyphicon-arrow-right"></i><i class="glyphicon glyphicon-arrow-left"></i></h2>
+      </button>
+
+    <button onclick="right()" id="controls" style="display: inline-block;">
+        <h2 class="w3-xxlarge"><i class="glyphicon glyphicon-arrow-right"></i></h2>
+      </button>
+
   </div>
 
+  <div id="Panel" name="buttonPanel">
+    <button id="controls" onclick="trafficData()" style="display: inline-block;"><h4>Get Data</h4></button>
+    <button id="controls" onclick="resetTrafficData()" style="display: inline-block;"><h4>Reset Data</h4></button>
+    <button id="controls" onclick="getStatus()" style="display: inline-block;"><h4>Get Divider Status</h4></button>
+  </div>
+
+  <div id="Panel" name="statusPanel">
+    <div id="trafficDataDisplay">
+      <p><b>Traffic Data:</b></p>
+      <textarea disabled no- id="trafficTA" style="resize:none; width:100%; height:180px;"></textarea>
+    </div>
+    <p id="dividerStatusDisplay"><b>Divider Status:</b></p>
+  </div>
 
 
   <div class="footer">
@@ -51,4 +72,5 @@
   </div>
 
 </body>
+
 </html>

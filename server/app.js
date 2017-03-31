@@ -208,14 +208,60 @@ app.get('/trafficData', function(req,res){
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-
-
       console.log(pretty.render(JSON.parse(body)));
+      res.send(body);
+      return;
     });
 
   }).catch((err) => {
     console.error('Error getting token', err);
     });
+})
+
+var divider = {
+  left: 0,
+  center: 1,
+  right: 0
+}
+
+app.get('/left', function(req,res){
+  divider.left = 1;
+  divider.center = 0;
+  divider.right = 0;
+  res.status(200).end();
+})
+
+app.get('/center', function(req,res){
+  divider.left = 0;
+  divider.center = 1;
+  divider.right = 0;
+  res.status(200).end();
+})
+
+app.get('/right', function(req,res){
+  divider.left = 0;
+  divider.center = 0;
+  divider.right = 1;
+  res.status(200).end();  
+})
+
+app.get('/dividerStatus', function(req, res){
+  
+  if(divider.left === 1){
+    res.send('left');
+    return;
+  }
+
+  if(divider.center === 1){
+    res.send('center');
+    return;
+  }
+
+  if(divider.right === 1){
+    res.send('right');
+    return;
+  }
+
 })
 
 // Sample route middleware to ensure user is authenticated.
