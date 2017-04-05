@@ -11,6 +11,9 @@ var index = require('./routes/index');
 // get config settings from local file or VCAPS env var in the cloud
 var config = require('./predix-config');
 
+var json2xls = require('json2xls');
+var fs =  require('fs');
+
 var passport;  // only used if you have configured properties for UAA
 // configure passport for oauth authentication with UAA
 var passportConfig = require('./passport-config');
@@ -182,6 +185,9 @@ app.get('/favicon.ico', function (req, res) {
 	res.send('favicon.ico');
 });
 
+var flatten = require('flat');
+var jsonfile = require('jsonfile');
+var jsondump = 'jsondump.json';
 
 app.get('/trafficData', function(req,res){
   uaa_util.getToken(uaa_url, client_id, client_secret).then((newToken) => {
@@ -191,13 +197,20 @@ app.get('/trafficData', function(req,res){
 
     var options = {
       method: 'GET',
-      url: 'https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000018',
+      url: 'https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000019/events',
+      qs: 
+      { 
+        'event-types': 'TFEVT',
+        'start-ts': '1483228800000',
+        'end-ts': '1491091200000',
+        size: '20000' 
+      },
       /*qs:
       { 'event-types': 'TFEVT',
         'start-ts': '1453766605577',
         'end-ts': '1453772603879',
-        size: '10',
-        page: '1' },*/
+        'size': '10',
+        'page': '1' },*/
       headers:
       { //'postman-token': '37688865-2e17-4500-ec8d-ba80df59f3b3',
         //'cache-control': 'no-cache',
@@ -208,7 +221,17 @@ app.get('/trafficData', function(req,res){
 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
-      console.log(pretty.render(JSON.parse(body)));
+      //console.log(pretty.render(JSON.parse(body)));
+      var jsoncontents = JSON.parse(body)["_embedded"];
+      jsonfile.writeFile(jsondump,jsoncontents,function (err)
+      {
+        console.error(err);
+      })
+      //console.log(flatten(jsoncontents["_embedded"]["events"]));
+      //console.log(JSON.parse())
+      //console.log(pretty.render(jsoncontents["_embedded"].events));
+      //var xls = json2xls(flatten(jsoncontents["_embedded"].events));
+      //fs.writeFileSync('data.xlsx',xls,'binary');
       res.send(body);
       return;
     });
