@@ -187,7 +187,7 @@ app.get('/favicon.ico', function (req, res) {
 
 var flatten = require('flat');
 var jsonfile = require('jsonfile');
-var jsondump = 'jsondump.json';
+var jsondump = 'json18.json';
 
 app.get('/trafficData', function(req,res){
   uaa_util.getToken(uaa_url, client_id, client_secret).then((newToken) => {
@@ -197,7 +197,7 @@ app.get('/trafficData', function(req,res){
 
     var options = {
       method: 'GET',
-      url: 'https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000019/events',
+      url: 'https://ie-traffic.run.aws-usw02-pr.ice.predix.io/v1/assets/1000000018/events',
       qs: 
       { 
         'event-types': 'TFEVT',
