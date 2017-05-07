@@ -7,6 +7,7 @@ import matplotlib.dates as mdate
 from sklearn.cluster import KMeans
 from sklearn import metrics
 import numpy as np
+from classifier import classify
 
 def bubble(vehicle_types):
     iter_item = 0
@@ -40,26 +41,30 @@ def pearsonr(x, y):
 def getFromDict(dataDict, mapList):
     return reduce(operator.getitem, mapList, dataDict)
 
-data = json.load(open('json18.json'))
-df = pd.DataFrame(columns=('Vehicle-Type','Speed','Vehicle Count','Time Stamp','Hour'))
 
-index = 0
-
-for events, subdict in data.items():
-    print (events)
-    for vehicles in itertools.chain(subdict):
-        vtype = getFromDict(vehicles,['properties','vehicle-type'])
-        speed = getFromDict(vehicles,['measures',1,'value'])
-        vcount = getFromDict(vehicles,['measures',2,'value'])
-        #timestamp = datetime.datetime.fromtimestamp(getFromDict(vehicles,['timestamp'])/1000.0).strptime('%H')
-        timestamp = mdate.epoch2num(getFromDict(vehicles,['timestamp'])/1000.0)
-        hour = datetime.datetime.fromtimestamp(getFromDict(vehicles,['timestamp'])/1000.0).strftime('%H')
-        #print (hour)
-        index += 1
-        df.loc[index] = [vtype,speed,vcount,timestamp,int(hour)]
-        #print(df.loc[index])
-        if (index > 4000):
-            break
+def jsonformat():
+    data = json.load(open('json26.json'))
+    df = pd.DataFrame(columns=('Vehicle-Type','Speed','Vehicle Count','Time Stamp','Hour'))
+    
+    index = 0
+    
+    for events, subdict in data.items():
+        print (events)
+        for vehicles in itertools.chain(subdict):
+            vtype = getFromDict(vehicles,['properties','vehicle-type'])
+            speed = getFromDict(vehicles,['measures',1,'value'])
+            vcount = getFromDict(vehicles,['measures',2,'value'])
+            #timestamp = datetime.datetime.fromtimestamp(getFromDict(vehicles,['timestamp'])/1000.0).strptime('%H')
+            timestamp = mdate.epoch2num(getFromDict(vehicles,['timestamp'])/1000.0)
+            hour = datetime.datetime.fromtimestamp(getFromDict(vehicles,['timestamp'])/1000.0).strftime('%H')
+            #print (hour)
+            index += 1
+            df.loc[index] = [vtype,speed,vcount,timestamp,int(hour)]
+            #print(df.loc[index])
+            if (index > 2000):
+                break
+    
+    return df
 
 '''
 #To save the filtered reading into a file
@@ -89,7 +94,7 @@ plt.show()
 print(vehicle)
 '''
 
-
+df = jsonformat()
 
 #Bubble Chart
 
@@ -97,17 +102,17 @@ print(vehicle)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 scat = ax.scatter(x=df['Hour'], y=df['Speed'], s=df['Vehicle Count']*bubble(df['Vehicle-Type']),label='Traffic Density')
-plt.xlabel('Time Stamp')
-plt.ylabel('Speed of Vehicle')
+plt.xlabel('Time Stamp (Hrs)')
+plt.ylabel('Speed of Vehicle (mps)')
 plt.show()
 
 #KMeans Clustering
 
 data1 = df[['Hour','Speed']]
 data1['Vehicle Density'] = bubble(df['Vehicle-Type'])*df['Vehicle Count']
-model = KMeans(n_clusters = 2)
+model = KMeans(n_clusters=2,init='k-means++',random_state=99999,tol=0.0001)
 model.fit(data1)
-df['Class'] = model.labels_
+data1['Class'] = model.labels_
 print(metrics.cluster.silhouette_score(data1,model.labels_))
 print(metrics.calinski_harabaz_score(data1,model.labels_))
 
@@ -117,6 +122,25 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 scat = ax.scatter(x=df['Hour'], y=df['Speed'], s=df['Vehicle Count']*bubble(df['Vehicle-Type']),
                   c=colormap[model.labels_],label='Traffic Density')
-plt.xlabel('Time Stamp') 
-plt.ylabel('Speed of Vehicle')
+plt.xlabel('Time Stamp (Hrs)')
+plt.ylabel('Speed of Vehicle (mps)')
 plt.show()
+
+'''---------------------------- KMeans cluster analysis -----------------'''
+labels = []
+sil_coeffs = [] 
+for n_cluster in range(2, 11):
+    kmeans = KMeans(n_clusters=n_cluster).fit(data1)
+    label = kmeans.labels_
+    labels.append(label)
+    sil_coeff = metrics.silhouette_score(data1, label, metric='euclidean')
+    sil_coeffs.append(sil_coeff)
+    print("For n_clusters={}, The Silhouette Coefficient is {}".format(n_cluster, sil_coeff))
+
+
+'''----------------------------- Wieghted Average of Hours -------------------'''
+hrs = set(data1['Hour'])
+congestion = {}
+for h in hrs:
+    congestion[h] = sum(data1[data1['Hour']==h]['Vehicle Density'])
+congestion = [c/sum(congestion) for c in congestion]
